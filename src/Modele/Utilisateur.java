@@ -1,11 +1,11 @@
 package Modele;
 
 public class Utilisateur {
-    protected String userNom;
+    protected String userMdp;
     protected String userMail;
 
-    public Utilisateur (String userNom, String userMail) {
-        this.userNom = userNom;
+    public Utilisateur (String userMdp, String userMail) {
+        this.userMdp = userMdp;
         this.userMail = userMail;
     }
 }
