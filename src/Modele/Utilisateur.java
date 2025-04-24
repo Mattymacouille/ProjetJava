@@ -8,4 +8,9 @@ public class Utilisateur {
         this.userMdp = userMdp;
         this.userMail = userMail;
     }
+
+    public void ajouterReservation() {}
+    public void supprimerReservation() {}
+    public void afficherReservation() {}
+    public void modifierReservation() {}
 }
