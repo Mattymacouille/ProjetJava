@@ -24,15 +24,15 @@ public class ClientDAOImpl implements ClientDAO {
         try {
             Connection connexion = daoFactory.getConnection();
             Statement statement = connexion.createStatement();
-            ResultSet resultats = statement.executeQuery("SELECT * FROM clients");
+            ResultSet resultats = statement.executeQuery("SELECT * FROM client");
 
             while (resultats.next()) {
-                int clientId = resultats.getInt("clientID");
-                String userMail = resultats.getString("userMail");
-                String userMdp = resultats.getString("userMdp");
-                String nom = resultats.getString("clientNom");
-                String prenom = resultats.getString("clientPrenom");
-                LocalDate dateNaissance = resultats.getDate("clientDateNaissance").toLocalDate();
+                int clientId = resultats.getInt("id_client");
+                String userMail = resultats.getString("mail");
+                String userMdp = resultats.getString("mdp");
+                String nom = resultats.getString("nom");
+                String prenom = resultats.getString("prenom");
+                LocalDate dateNaissance = resultats.getDate("date_naissance").toLocalDate();
 
                 Client client = new Client(userMdp, userMail, nom, prenom, dateNaissance, clientId);
                 listeClients.add(client);
@@ -52,19 +52,24 @@ public class ClientDAOImpl implements ClientDAO {
     public void ajouter(Client client) {
         try {
             Connection connexion = daoFactory.getConnection();
+            String sqlUtilisateur = "INSERT INTO Utilisateur (mail, mdp) VALUES (?, ?)";
+            PreparedStatement psUtilisateur = connexion.prepareStatement(sqlUtilisateur);
+            psUtilisateur.setString(1, client.getUserMail());
+            psUtilisateur.setString(2, client.getUserMdp());
+            psUtilisateur.executeUpdate();
 
-            String sql = "INSERT INTO clients (userMail, userMdp, clientNom, clientPrenom, clientDateNaissance) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement statement = connexion.prepareStatement(sql);
+            String sqlClient = "INSERT INTO client (mail, mdp, nom, prenom, date_naissance) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement psClient = connexion.prepareStatement(sqlClient);
 
-            statement.setString(1, client.getUserMail());
-            statement.setString(2, client.getUserMdp());
-            statement.setString(3, client.getNom());
-            statement.setString(4, client.getPrenom());
-            statement.setDate(5, Date.valueOf(client.getDateNaissance()));
+            psClient.setString(1, client.getUserMail());
+            psClient.setString(2, client.getUserMdp());
+            psClient.setString(3, client.getNom());
+            psClient.setString(4, client.getPrenom());
+            psClient.setDate(5, Date.valueOf(client.getDateNaissance()));
 
-            statement.executeUpdate();
+            psClient.executeUpdate();
 
-            statement.close();
+            psClient.close();
             connexion.close();
         } catch (SQLException e) {
             e.printStackTrace();
