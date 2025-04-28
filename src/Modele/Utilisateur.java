@@ -4,13 +4,24 @@ public class Utilisateur {
     protected String userMdp;
     protected String userMail;
 
-    public Utilisateur (String userMdp, String userMail) {
+    public Utilisateur(String userMdp, String userMail) {
         this.userMdp = userMdp;
         this.userMail = userMail;
     }
 
-    public void ajouterReservation() {}
-    public void supprimerReservation() {}
-    public void afficherReservation() {}
-    public void modifierReservation() {}
+    public String getUserMdp() {
+        return userMdp;
+    }
+
+    public String getUserMail() {
+        return userMail;
+    }
+
+    public void setUserMdp(String userMdp) {
+        this.userMdp = userMdp;
+    }
+
+    public void setUserMail(String userMail) {
+        this.userMail = userMail;
+    }
 }
