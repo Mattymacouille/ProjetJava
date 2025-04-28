@@ -24,5 +24,4 @@ public class Client extends Utilisateur{
     public void setNom(String nom) {this.nom = nom;}
     public void setPrenom(String prenom) {this.prenom = prenom;}
     public void setDateNaissance(LocalDate dateNaissance) {this.dateNaissance = dateNaissance;}
-    public void setClientId(int clientId) {this.clientId = clientId;}
 }
