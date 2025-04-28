@@ -8,8 +8,8 @@ import Modele.Client;
 public class VueClient {
     public void afficherClient(Client client) {
         // Afficher un client
-        System.out.println("Id client : " + client.getClientId() + " Nom : " + client.getclientNom()
-                + " Mail : " + client.getclientMail());
+        System.out.println("Id client : " + client.getClientId() + " Nom : " + client.getNom()
+                + " Mail : " + client.userMail());
     }
 
     /**
