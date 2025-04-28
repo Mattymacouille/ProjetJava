@@ -82,25 +82,50 @@ public class Main {
 
 // CONSIGNES 2 A 9 POUR LES CLIENTS
 
-        System.out.print("Veuillez entrer le nom du nouveau client : ");
-        String nom = scanner.nextLine();
-        System.out.print("Veuillez entrer prenom du nouveau client : ");
-        String prenom = scanner.nextLine();
-        System.out.print("Veuillez entrer le mail du nouveau client : ");
+
+        System.out.print("Veuillez entrer votre mail : ");
         String mail = scanner.nextLine();
-        System.out.print("Veuillez entrer Mot de passe du nouveau client : ");
+
+        System.out.print("Veuillez entrer votre mot de passe : ");
         String mdp = scanner.nextLine();
-        System.out.print("Veuillez entrer la date de naissance du nouveau client (format AAAA-MM-JJ) : ");
-        String dateNaissanceStr = scanner.nextLine();
-        LocalDate dateNaissance = LocalDate.parse(dateNaissanceStr);
+
+        ClientDAOImpl clientDAO = new ClientDAOImpl(dao); // ton DAO
+
+        if (clientDAO.chercherUtilisateur(mail, mdp)) {
+            // connecté
+            if (clientDAO.EtreAdmin(mail)) {
+                System.out.println("Bienvenue bel admin !");
+            } else {
+                System.out.println("Connexion réussie !");
+            }
+        } else {
+            System.out.println("Utilisateur inconnu. Création d'un nouveau compte...");
+
+            System.out.print("Entrez votre nom : ");
+            String nom = scanner.nextLine();
+
+            System.out.print("Entrez votre prénom : ");
+            String prenom = scanner.nextLine();
+
+            System.out.print("Entrez votre date de naissance (AAAA-MM-JJ) : ");
+            String dateNaissanceStr = scanner.nextLine();
+            LocalDate dateNaissance = LocalDate.parse(dateNaissanceStr);
+
+            System.out.print("Entrez votre mail : ");
+            String newmail = scanner.nextLine();
+
+            System.out.print("Entrez votre mdp : ");
+            String newmdp = scanner.nextLine();
 
 
-        // Q3 On instancie un objet de client avec ce com et ce mail
-        Client nouveauClient = new Client(mdp,mail, nom, prenom,dateNaissance,0); // Ici l'ID est mis à 0 car il sera généré automatiquement
 
-        // Q4 On ajoute cet objet dans la table clients de la BDD
-        clidao.ajouter(nouveauClient);
-        System.out.println("Nouveau client ajouté avec succès !");
+            // Création d'un nouveau Client
+            Client nouveauClient = new Client( newmdp,newmail, nom, prenom, dateNaissance,0);
+
+            // Appel à ajouter
+            clientDAO.ajouter(nouveauClient);
+        }
+
 
       /*  // Q5 on saisi un identifiant (int) de client
         System.out.print("Veuillez entrer l'ID du client à chercher : ");

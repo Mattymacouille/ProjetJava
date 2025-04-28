@@ -58,6 +58,7 @@ public class ClientDAOImpl implements ClientDAO {
             psUtilisateur.setString(2, client.getUserMdp());
             psUtilisateur.executeUpdate();
 
+
             String sqlClient = "INSERT INTO client (mail, mdp, nom, prenom, date_naissance) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement psClient = connexion.prepareStatement(sqlClient);
 
@@ -74,6 +75,39 @@ public class ClientDAOImpl implements ClientDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Ajout du client impossible");
+        }
+    }
+
+    public boolean chercherUtilisateur(String mail, String mdp) {
+
+
+        try {
+            Connection connexion = daoFactory.getConnection();
+            String sql = "SELECT * FROM Utilisateur WHERE mail = ? AND mdp = ?";
+            PreparedStatement ps = connexion.prepareStatement(sql);
+            ps.setString(1, mail);
+            ps.setString(2, mdp);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // s'il trouve une ligne, l'utilisateur existe
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean EtreAdmin(String mail) {
+
+
+        try {
+            Connection connexion = daoFactory.getConnection();
+            String sql = "SELECT * FROM Admin WHERE mail = ?";
+            PreparedStatement statement = connexion.prepareStatement(sql);
+            statement.setString(1, mail);
+            ResultSet rs = statement.executeQuery();
+            return rs.next(); // Si une ligne est trouvée => c'est un admin
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
