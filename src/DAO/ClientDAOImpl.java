@@ -27,7 +27,7 @@ public class ClientDAOImpl implements ClientDAO {
             ResultSet resultats = statement.executeQuery("SELECT * FROM client");
 
             while (resultats.next()) {
-                int clientId = resultats.getInt("id_client");
+                int clientId = resultats.getInt("id");
                 String userMail = resultats.getString("mail");
                 String userMdp = resultats.getString("mdp");
                 String nom = resultats.getString("nom");
@@ -78,31 +78,31 @@ public class ClientDAOImpl implements ClientDAO {
         }
     }
 
-    public boolean chercherUtilisateur(String mail, String mdp) {
-
-
+    public int chercherUtilisateur(String mail, String mdp) {
+        int id = -1; // -1 veut dire non trouvé
         try {
             Connection connexion = daoFactory.getConnection();
-            String sql = "SELECT * FROM Utilisateur WHERE mail = ? AND mdp = ?";
+            String sql = "SELECT id FROM Utilisateur WHERE mail = ? AND mdp = ?";
             PreparedStatement ps = connexion.prepareStatement(sql);
             ps.setString(1, mail);
             ps.setString(2, mdp);
             ResultSet rs = ps.executeQuery();
-            return rs.next(); // s'il trouve une ligne, l'utilisateur existe
+            if (rs.next()) {
+                id = rs.getInt("id");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return id;
     }
 
-    public boolean EtreAdmin(String mail) {
 
-
+    public boolean EtreAdmin(int id) {
         try {
             Connection connexion = daoFactory.getConnection();
-            String sql = "SELECT * FROM Admin WHERE mail = ?";
+            String sql = "SELECT * FROM Admin WHERE id = ?";
             PreparedStatement statement = connexion.prepareStatement(sql);
-            statement.setString(1, mail);
+            statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             return rs.next(); // Si une ligne est trouvée => c'est un admin
         } catch (SQLException e) {
@@ -111,12 +111,13 @@ public class ClientDAOImpl implements ClientDAO {
         }
     }
 
+
     public Client chercher(int id) {
         Client client = null;
 
         try {
             Connection connexion = daoFactory.getConnection();
-            String sql = "SELECT * FROM clients WHERE clientID = ?";
+            String sql = "SELECT * FROM clients WHERE id = ?";
             PreparedStatement statement = connexion.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultats = statement.executeQuery();

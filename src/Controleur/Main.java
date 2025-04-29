@@ -17,7 +17,7 @@ public class Main {
         ClientDAOImpl clidao = new ClientDAOImpl(dao);
 
 
-        // Récupérer la liste des clients de la base de données avec l'objet clidao de la classe ClientDAOImpl
+        // Récupérer la liste des clients de la base de donné<<<W<<z&zes avec l'objet clidao de la classe ClientDAOImpl
         ArrayList<Client> clients = clidao.getAll();
 
 
@@ -89,15 +89,16 @@ public class Main {
         System.out.print("Veuillez entrer votre mot de passe : ");
         String mdp = scanner.nextLine();
 
-        ClientDAOImpl clientDAO = new ClientDAOImpl(dao); // ton DAO
+        int idUtilisateur = clidao.chercherUtilisateur(mail, mdp);
 
-        if (clientDAO.chercherUtilisateur(mail, mdp)) {
-            // connecté
-            if (clientDAO.EtreAdmin(mail)) {
+        if (idUtilisateur != -1) { // Si trouvé
+            if (clidao.EtreAdmin(idUtilisateur)) {
                 System.out.println("Bienvenue bel admin !");
             } else {
                 System.out.println("Connexion réussie !");
             }
+
+
         } else {
             System.out.println("Utilisateur inconnu. Création d'un nouveau compte...");
 
@@ -123,7 +124,7 @@ public class Main {
             Client nouveauClient = new Client( newmdp,newmail, nom, prenom, dateNaissance,0);
 
             // Appel à ajouter
-            clientDAO.ajouter(nouveauClient);
+            clidao.ajouter(nouveauClient);
         }
 
 
