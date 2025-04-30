@@ -19,7 +19,7 @@ public interface ClientDAO {
      Ajouter un nouveau client en paramètre dans la base de données
      @params : client = objet de Client à insérer dans la base de données
      */
-    public void ajouter(Client client) ;
+    public void ajouter(Client client, String mail, String mdp) ;
 
     /**
      * Permet de chercher et récupérer un objet de Client dans la base de données via son id en paramètre

@@ -28,13 +28,12 @@ public class ClientDAOImpl implements ClientDAO {
 
             while (resultats.next()) {
                 int clientId = resultats.getInt("id");
-                String userMail = resultats.getString("mail");
-                String userMdp = resultats.getString("mdp");
+
                 String nom = resultats.getString("nom");
                 String prenom = resultats.getString("prenom");
                 LocalDate dateNaissance = resultats.getDate("date_naissance").toLocalDate();
 
-                Client client = new Client(userMdp, userMail, nom, prenom, dateNaissance, clientId);
+                Client client = new Client(clientId, nom, prenom, dateNaissance);
                 listeClients.add(client);
             }
 
@@ -49,37 +48,47 @@ public class ClientDAOImpl implements ClientDAO {
         return listeClients;
     }
 
-    public void ajouter(Client client) {
+    public void ajouter(Client client, String mail, String mdp) {
         try {
             Connection connexion = daoFactory.getConnection();
+
+            // Étape 1 : insertion dans Utilisateur
             String sqlUtilisateur = "INSERT INTO Utilisateur (mail, mdp) VALUES (?, ?)";
-            PreparedStatement psUtilisateur = connexion.prepareStatement(sqlUtilisateur);
-            psUtilisateur.setString(1, client.getUserMail());
-            psUtilisateur.setString(2, client.getUserMdp());
+            PreparedStatement psUtilisateur = connexion.prepareStatement(sqlUtilisateur, Statement.RETURN_GENERATED_KEYS);
+            psUtilisateur.setString(1, mail);
+            psUtilisateur.setString(2, mdp);
             psUtilisateur.executeUpdate();
 
+            // Récupération de l'id généré
+            ResultSet rs = psUtilisateur.getGeneratedKeys();
+            int idUtilisateur;
+            if (rs.next()) {
+                idUtilisateur = rs.getInt(1);
+            } else {
+                throw new SQLException("Échec de la création de l'utilisateur.");
+            }
 
-            String sqlClient = "INSERT INTO client (mail, mdp, nom, prenom, date_naissance) VALUES (?, ?, ?, ?, ?)";
+            // Étape 2 : insertion dans Client avec l'id
+            String sqlClient = "INSERT INTO Client (id, nom, prenom, date_naissance) VALUES (?, ?, ?, ?)";
             PreparedStatement psClient = connexion.prepareStatement(sqlClient);
-
-            psClient.setString(1, client.getUserMail());
-            psClient.setString(2, client.getUserMdp());
-            psClient.setString(3, client.getNom());
-            psClient.setString(4, client.getPrenom());
-            psClient.setDate(5, Date.valueOf(client.getDateNaissance()));
-
+            psClient.setInt(1, idUtilisateur);
+            psClient.setString(2, client.getNom());
+            psClient.setString(3, client.getPrenom());
+            psClient.setDate(4, Date.valueOf(client.getDateNaissance()));
             psClient.executeUpdate();
 
+            psUtilisateur.close();
             psClient.close();
             connexion.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Ajout du client impossible");
+            System.out.println("Ajout du client impossible.");
         }
     }
 
+
     public int chercherUtilisateur(String mail, String mdp) {
-        int id = -1; // -1 veut dire non trouvé
+        int id = -1; // -1 signifie non trouvé
         try {
             Connection connexion = daoFactory.getConnection();
             String sql = "SELECT id FROM Utilisateur WHERE mail = ? AND mdp = ?";
@@ -90,11 +99,14 @@ public class ClientDAOImpl implements ClientDAO {
             if (rs.next()) {
                 id = rs.getInt("id");
             }
+            ps.close();
+            connexion.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return id;
     }
+
 
 
     public boolean EtreAdmin(int id) {
@@ -104,12 +116,16 @@ public class ClientDAOImpl implements ClientDAO {
             PreparedStatement statement = connexion.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
-            return rs.next(); // Si une ligne est trouvée => c'est un admin
+            boolean isAdmin = rs.next();
+            statement.close();
+            connexion.close();
+            return isAdmin;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+
 
 
     public Client chercher(int id) {
@@ -130,7 +146,7 @@ public class ClientDAOImpl implements ClientDAO {
                 String prenom = resultats.getString("clientPrenom");
                 LocalDate dateNaissance = resultats.getDate("clientDateNaissance").toLocalDate();
 
-                client = new Client(userMdp, userMail, nom, prenom, dateNaissance, clientId);
+                client = new Client( clientId, nom, prenom, dateNaissance);
             }
 
             resultats.close();

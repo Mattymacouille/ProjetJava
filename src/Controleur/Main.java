@@ -121,10 +121,10 @@ public class Main {
 
 
             // Création d'un nouveau Client
-            Client nouveauClient = new Client( newmdp,newmail, nom, prenom, dateNaissance,0);
+            Client nouveauClient = new Client( 0,nom, prenom, dateNaissance);
 
             // Appel à ajouter
-            clidao.ajouter(nouveauClient);
+            clidao.ajouter(nouveauClient, newmail, newmdp);
         }
 
 
