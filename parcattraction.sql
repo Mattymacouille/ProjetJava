@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 28 avr. 2025 à 15:55
+-- Généré le : mar. 29 avr. 2025 à 12:17
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -28,17 +28,12 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `admin` (
-  `mail` varchar(255) NOT NULL
+                         `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `admin`
 --
-
-INSERT INTO `admin` (`mail`) VALUES
-('leo.courriol@admin.fr'),
-('marco.ferrante@admin.fr'),
-('matteo.devaux@admin.fr');
 
 -- --------------------------------------------------------
 
@@ -47,9 +42,9 @@ INSERT INTO `admin` (`mail`) VALUES
 --
 
 CREATE TABLE `attractions` (
-  `id_attraction` int(11) NOT NULL,
-  `nb_places` int(11) NOT NULL,
-  `prix_attraction` double NOT NULL
+                               `id_attraction` int(11) NOT NULL,
+                               `nb_places` int(11) NOT NULL,
+                               `prix_attraction` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -59,35 +54,27 @@ CREATE TABLE `attractions` (
 --
 
 CREATE TABLE `client` (
-  `id_client` int(11) NOT NULL,
-  `mail` varchar(255) NOT NULL,
-  `nom` varchar(100) NOT NULL,
-  `prenom` varchar(100) NOT NULL,
-  `date_naissance` date NOT NULL,
-  `mdp` varchar(255) NOT NULL
+                          `id` int(11) NOT NULL,
+                          `nom` varchar(100) NOT NULL,
+                          `prenom` varchar(100) NOT NULL,
+                          `date_naissance` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `client`
 --
 
-INSERT INTO `client` (`id_client`, `mail`, `nom`, `prenom`, `date_naissance`, `mdp`) VALUES
-(2, 'matteo.devaux', 'matteo', 'devaux', '2004-04-23', ''),
-(3, 'matteolove', 'colonel', 'moutarde', '2005-02-17', '');
-
--- --------------------------------------------------------
-
 --
 -- Structure de la table `reservation`
 --
 
 CREATE TABLE `reservation` (
-  `id_reservation` int(11) NOT NULL,
-  `id_client` int(11) NOT NULL,
-  `id_attraction` int(11) NOT NULL,
-  `date` date NOT NULL,
-  `prix_reservation` double NOT NULL,
-  `nb_clients` int(11) NOT NULL
+                               `id_reservation` int(11) NOT NULL,
+                               `id_client` int(11) NOT NULL,
+                               `id_attraction` int(11) NOT NULL,
+                               `date` date NOT NULL,
+                               `prix_reservation` double NOT NULL,
+                               `nb_clients` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -97,20 +84,14 @@ CREATE TABLE `reservation` (
 --
 
 CREATE TABLE `utilisateur` (
-  `mail` varchar(255) NOT NULL,
-  `mdp` varchar(255) NOT NULL
+                               `id` int(11) NOT NULL,
+                               `mail` varchar(255) DEFAULT NULL,
+                               `mdp` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `utilisateur`
 --
-
-INSERT INTO `utilisateur` (`mail`, `mdp`) VALUES
-('leo.courriol@admin.fr', 'jereparleamonex'),
-('marco.ferrante@admin.fr', 'sahur'),
-('matteo.devaux', 'caca'),
-('matteo.devaux@admin.fr', 'patapim'),
-('matteolove', 'colonel.pgt');
 
 --
 -- Index pour les tables déchargées
@@ -120,26 +101,25 @@ INSERT INTO `utilisateur` (`mail`, `mdp`) VALUES
 -- Index pour la table `admin`
 --
 ALTER TABLE `admin`
-  ADD PRIMARY KEY (`mail`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- Index pour la table `attractions`
 --
 ALTER TABLE `attractions`
-  ADD PRIMARY KEY (`id_attraction`);
+    ADD PRIMARY KEY (`id_attraction`);
 
 --
 -- Index pour la table `client`
 --
 ALTER TABLE `client`
-  ADD PRIMARY KEY (`id_client`),
-  ADD KEY `mail` (`mail`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- Index pour la table `reservation`
 --
 ALTER TABLE `reservation`
-  ADD PRIMARY KEY (`id_reservation`),
+    ADD PRIMARY KEY (`id_reservation`),
   ADD KEY `id_client` (`id_client`),
   ADD KEY `id_attraction` (`id_attraction`);
 
@@ -147,7 +127,7 @@ ALTER TABLE `reservation`
 -- Index pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  ADD PRIMARY KEY (`mail`);
+    ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -157,19 +137,19 @@ ALTER TABLE `utilisateur`
 -- AUTO_INCREMENT pour la table `attractions`
 --
 ALTER TABLE `attractions`
-  MODIFY `id_attraction` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `client`
---
-ALTER TABLE `client`
-  MODIFY `id_client` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+    MODIFY `id_attraction` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `id_reservation` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id_reservation` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Contraintes pour les tables déchargées
@@ -179,19 +159,19 @@ ALTER TABLE `reservation`
 -- Contraintes pour la table `admin`
 --
 ALTER TABLE `admin`
-  ADD CONSTRAINT `admin_ibfk_1` FOREIGN KEY (`mail`) REFERENCES `utilisateur` (`mail`);
+    ADD CONSTRAINT `admin_ibfk_1` FOREIGN KEY (`id`) REFERENCES `utilisateur` (`id`);
 
 --
 -- Contraintes pour la table `client`
 --
 ALTER TABLE `client`
-  ADD CONSTRAINT `client_ibfk_1` FOREIGN KEY (`mail`) REFERENCES `utilisateur` (`mail`);
+    ADD CONSTRAINT `client_ibfk_1` FOREIGN KEY (`id`) REFERENCES `utilisateur` (`id`);
 
 --
 -- Contraintes pour la table `reservation`
 --
 ALTER TABLE `reservation`
-  ADD CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`),
+    ADD CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id`),
   ADD CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`id_attraction`) REFERENCES `attractions` (`id_attraction`);
 COMMIT;
 

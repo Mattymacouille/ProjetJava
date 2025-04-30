@@ -17,7 +17,7 @@ public class Main {
         ClientDAOImpl clidao = new ClientDAOImpl(dao);
 
 
-        // Récupérer la liste des clients de la base de donné<<<W<<z&zes avec l'objet clidao de la classe ClientDAOImpl
+        // Récupérer la liste des clients de la base de données avec l'objet clidao de la classe ClientDAOImpl
         ArrayList<Client> clients = clidao.getAll();
 
 
